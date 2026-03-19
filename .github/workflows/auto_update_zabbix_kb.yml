@@ -5,6 +5,8 @@ on:
   schedule:
     - cron: '0 1 * * 0'  # 时区UTC，对应国内早上9点
   workflow_dispatch:     # 手动触发开关
+permissions:
+  contents: write  # 给workflow写权限，允许提交代码
 
 jobs:
   crawl_and_update:
@@ -13,8 +15,10 @@ jobs:
       # 步骤1：拉取仓库代码到云端服务器
       - name: 拉取GitHub仓库代码
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # 使用内置token授权
 
-      # 步骤2：配置Python环境（已移除cache配置，解决报错）
+      # 步骤2：配置Python环境
       - name: 设置Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -39,3 +43,5 @@ jobs:
           git add zabbix_knowledge_all.json
           git diff --quiet && git diff --staged --quiet || git commit -m "🚀 自动更新Zabbix知识库 $(date +'%Y-%m-%d %H:%M:%S')"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 传递token给git push
