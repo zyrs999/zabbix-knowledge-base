@@ -14,12 +14,11 @@ jobs:
       - name: 拉取GitHub仓库代码
         uses: actions/checkout@v4
 
-      # 步骤2：配置Python环境
+      # 步骤2：配置Python环境（已移除cache配置，解决报错）
       - name: 设置Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'  # 缓存依赖，加速运行
 
       # 步骤3：安装爬虫依赖
       - name: 安装requests和BeautifulSoup4
